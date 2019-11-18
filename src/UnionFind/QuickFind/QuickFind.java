@@ -16,7 +16,7 @@ public class QuickFind {
     /**
      * Integer array id[] of length N.
      * */
-    public QuickFind(int N) {
+    QuickFind(int N) {
         id = new int[N];
         for (int i = 0; i < N; i++) {
             id[i] = i;
@@ -26,7 +26,7 @@ public class QuickFind {
     /**
      * Check if p and q have the same id.
      * */
-    public boolean connected(int p, int q) {
+    boolean connected(int p, int q) {
         return id[p] == id[q];
     }
 
@@ -34,7 +34,7 @@ public class QuickFind {
      * To merge components containing p and q, change all entries
      * whose id equals id[p] to id[q].
      * */
-    public void union(int p, int q) {
+    void union(int p, int q) {
         int pid = id[p];
         int qid = id[q];
         for (int i = 0; i < id.length; i++) {
