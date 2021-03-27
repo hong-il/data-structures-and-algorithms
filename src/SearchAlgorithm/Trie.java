@@ -18,10 +18,75 @@ package SearchAlgorithm;
 * */
 class Solution {
     public class Trie {
+        Trie[] child = new Trie[26];
+        int count;
+        int aletter = Character.getNumericValue('a');
+
+        void insert(String str) {
+            Trie curr = this;
+            for (char ch : str.toCharArray()) {
+                curr.count++;
+                // a = 0, b = 1
+                int idx = Character.getNumericValue(ch) - aletter;
+                if (curr.child[idx] == null)
+                    curr.child[idx] = new Trie();
+
+                curr = curr.child[idx];
+            }
+
+            curr.count++;
+        }
+
+        int search(String str) {
+            Trie curr = this;
+            for (char ch : str.toCharArray()) {
+                if (ch == '?') return curr.count;
+
+                curr = curr.child[Character.getNumericValue(ch) - aletter];
+                if (curr == null)
+                    return 0;
+            }
+            // 문제 조건상 이 리턴이 발생할 일은 없음
+            return curr.count;
+        }
     }
 
+    Trie[] TrieRoot = new Trie[10000];
+    Trie[] ReTrieRoot = new Trie[10000];
+
     public int[] solution(String[] words, String[] queries) {
-        int[] answer = {};
+        int[] answer = new int[queries.length];
+        int ansIdx = 0;
+
+        for (String str : words) {
+            // TrieRoot 또는 ReTrieRoot 의 인덱스 0 ~ 9999까지
+            int idx = str.length() - 1;
+            if (TrieRoot[idx] == null) {
+                TrieRoot[idx] = new Trie();
+                ReTrieRoot[idx] = new Trie();
+            }
+
+            TrieRoot[idx].insert(str);
+            str = new StringBuilder(str).reverse().toString();
+            ReTrieRoot[idx].insert(str);
+        }
+
+        for (String str : queries) {
+            int idx = str.length() - 1;
+            // 빈 공백
+            if (TrieRoot[idx] == null) {
+                answer[ansIdx++] = 0;
+                continue;
+            }
+
+            if (str.charAt(0) != '?') {
+                answer[ansIdx++] = TrieRoot[idx].search(str);
+            } else {
+                str = new StringBuilder(str).reverse().toString();
+                answer[ansIdx++] = ReTrieRoot[idx].search(str);
+            }
+        }
+
         return answer;
     }
 }
