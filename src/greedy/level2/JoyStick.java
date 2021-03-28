@@ -24,14 +24,27 @@ public class JoyStick {
     private static final int Z = 90;
 
     public int solution(String name) {
-        return 0;
+        return countUpDownMovement(name) + countLeftRightMovement(name);
     }
 
     private int countUpDownMovement(String str) {
-        return 0;
+        int count = 0;
+        for (char ch : str.toCharArray())
+            count += Math.min(ch - A, Z - ch + 1);
+        return count;
     }
 
     private int countLeftRightMovement(String name) {
-        return 0;
+        int min = name.length() - 1;
+        for (int i = 0; i < name.length(); i++) {
+            int endOfAIndex = i;
+            if (name.charAt(endOfAIndex) == A) {
+                while (endOfAIndex < name.length() && name.charAt(endOfAIndex) == A)
+                    endOfAIndex++;
+                int moveCount = ((i - 1) * 2) + (name.length() - endOfAIndex);
+                min = Math.min(min, Math.max(0, moveCount));
+            }
+        }
+        return min;
     }
 }
